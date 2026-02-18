@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Futuristic Dark Palette */
+  --bg-primary: #0C0C0C;
+  --bg-secondary: #481E14;
+  --accent-primary: #9B3922;
+  --accent-bright: #F2613F;
+  
+  /* Neumorphic Shadows */
+  --shadow-light: rgba(242, 97, 63, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.7);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #a8a8a8;
+  --text-muted: #6b6b6b;
+  
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
 }
 
 @theme inline {
@@ -12,15 +27,200 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 100%;
+}
+
+/* Neumorphic Card Base */
+.neuro-card {
+  background: linear-gradient(145deg, rgba(72, 30, 20, 0.3), rgba(12, 12, 12, 0.5));
+  border: 1px solid rgba(155, 57, 34, 0.2);
+  border-radius: 24px;
+  box-shadow: 
+    10px 10px 24px var(--shadow-dark),
+    -10px -10px 24px var(--shadow-light),
+    inset 0 1px 1px rgba(242, 97, 63, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neuro-card:hover {
+  box-shadow: 
+    14px 14px 28px var(--shadow-dark),
+    -14px -14px 28px var(--shadow-light),
+    inset 0 1px 2px rgba(242, 97, 63, 0.15);
+  border-color: rgba(155, 57, 34, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Neumorphic Button */
+.neuro-btn {
+  background: linear-gradient(145deg, rgba(155, 57, 34, 0.9), rgba(72, 30, 20, 0.9));
+  border: 1px solid rgba(242, 97, 63, 0.3);
+  border-radius: 14px;
+  box-shadow: 
+    6px 6px 14px rgba(0, 0, 0, 0.6),
+    -3px -3px 10px rgba(242, 97, 63, 0.05);
+  color: var(--text-primary);
+  padding: 14px 28px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  letter-spacing: 0.025em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.neuro-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(242, 97, 63, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.neuro-btn:hover::before {
+  left: 100%;
+}
+
+.neuro-btn:hover {
+  background: linear-gradient(145deg, rgba(242, 97, 63, 0.95), rgba(155, 57, 34, 0.95));
+  box-shadow: 
+    8px 8px 18px rgba(0, 0, 0, 0.7),
+    -4px -4px 12px rgba(242, 97, 63, 0.1),
+    0 0 24px rgba(242, 97, 63, 0.3);
+  transform: translateY(-2px);
+  border-color: rgba(242, 97, 63, 0.5);
+}
+
+.neuro-btn:active {
+  box-shadow: 
+    inset 4px 4px 10px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 8px rgba(242, 97, 63, 0.05);
+  transform: translateY(0);
+}
+
+.neuro-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Neumorphic Input */
+.neuro-input {
+  background: line4px;
+  box-shadow: 
+    inset 4px 4px 10px rgba(0, 0, 0, 0.7),
+    inset -2px -2px 8px rgba(242, 97, 63, 0.03);
+  color: var(--text-primary);
+  padding: 14px 18px;
+  width: 100%;
+  font-size: 0.9375rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.neuro-input::placeholder {
+  color: var(--text-muted);
+}
+
+.neuro-input:focus {
+  border-color: rgba(242, 97, 63, 0.6);
+  box-shadow: 
+    inset 4px 4px 10px rgba(0, 0, 0, 0.7),
+    inset -2px -2px 8px rgba(242, 97, 63, 0.05),
+    0 0 164px 4px 8px rgba(0, 0, 0, 0.7),
+    inset -2px -2px 6px rgba(242, 97, 63, 0.05),
+    0 0 15px rgba(242, 97, 63, 0.2);
+}
+
+/* Futuristic Glow Effect */
+.glow-text {
+  text-shadow: 0 0 10px rgba(242, 97, 63, 0.5),
+               0 0 20px rgba(242, 97, 63, 0.3),
+               0 0 30px rgba(242, 97, 63, 0.1);
+}
+
+/* Scanline Effect */
+.scanline {
+  position: relative;
+}
+
+.scanline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(242, 97, 63, 0.03) 0px,
+    transparent 1px,
+    transparent 2px,
+    rgba(242, 97, 63, 0.03) 3px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Holographic Border */
+.holo-border {
+  position: relative;
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
+              linear-gradient(135deg, rgba(242, 97, 63, 0.4), rgba(155, 57, 34, 0.4), rgba(72, 30, 20, 0.4)) border-box;
+  border-radius: 16px;
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  border: 3px solid rgba(242, 97, 63, 0.1);
+  border-top-color: var(--accent-bright);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+  border-left: 1px solid rgba(155, 57, 34, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(145deg, rgba(155, 57, 34, 0.6), rgba(72, 30, 20, 0.6));
+  border-radius: 10px;
+  border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(145deg, rgba(242, 97, 63, 0.7), rgba(155, 57, 34, 0.7));
 }

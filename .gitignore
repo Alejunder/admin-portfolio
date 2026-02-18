@@ -9,6 +9,8 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.vscode
+
 
 # testing
 /coverage
@@ -39,3 +41,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/app/generated/prisma
+
+# MCP
+mcpsupabase.json
+
+# Uploaded files
+/public/uploads/*
+!/public/uploads/**/.gitkeep
