@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,7 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// User model with role-based access
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -21,98 +17,75 @@ model User {
   @@map("users")
 }
 
-enum Role {
-  ADMIN
-}
-
-// Project model for portfolio projects
 model Project {
-  id          String   @id @default(cuid())
-  slug        String   @unique // URL-friendly identifier
-  
-  // Multilingual content (JSON fields for en/es)
-  title       Json     // { "en": "Title", "es": "Título" }
-  description Json     // { "en": "Description", "es": "Descripción" }
-  
-  // Project details
-  technologies String[] // Array of technology names (e.g., ["React", "Node.js"])
-  accentColor String   @default("#0ff") // Hex color for UI theming
-  imageUrl    String?  // Main project image
-  githubUrl   String?  // GitHub repository URL
-  liveUrl     String?  // Live demo URL
-  
-  // Visibility & ordering
-  published   Boolean  @default(true)
-  featured    Boolean  @default(false)
-  order       Int      @default(0)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        Json
+  description  Json
+  technologies String[]
+  accentColor  String   @default("#0ff")
+  imageUrl     String?
+  githubUrl    String?
+  liveUrl      String?
+  published    Boolean  @default(true)
+  featured     Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([published, featured, order])
   @@map("projects")
 }
 
-// Certification model for credentials
 model Certification {
-  id          String   @id @default(cuid())
-  
-  // Multilingual content
-  title       Json     // { "en": "Title", "es": "Título" }
-  issuer      Json     // { "en": "Issuer", "es": "Emisor" }
-  
-  // Certification URLs and media
-  imageUrl    String   // Diploma/certificate image
-  credentialUrl String? // External verification link (e.g., Platzi, Coursera)
-  
-  // Visibility & ordering
-  published   Boolean  @default(true)
-  featured    Boolean  @default(false)
-  order       Int      @default(0)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  title         Json
+  issuer        Json
+  imageUrl      String
+  credentialUrl String?
+  published     Boolean  @default(true)
+  featured      Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@index([published, order])
   @@map("certifications")
 }
 
-// ContactMessage model for storing contact form submissions
 model ContactMessage {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   name      String
   email     String
   subject   String?
-  message   String   @db.Text
+  message   String
   status    MessageStatus @default(UNREAD)
   ipAddress String?
   userAgent String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@map("contact_messages")
+}
+
+model About {
+  id          String   @id @default(cuid())
+  title       Json
+  description Json
+  shortBio    Json?
+  location    String?
+  email       String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("about")
+}
+
+enum Role {
+  ADMIN
 }
 
 enum MessageStatus {
   UNREAD
   READ
   ARCHIVED
-}
-
-// About model for portfolio information
-model About {
-  id          String   @id @default(cuid())
-  
-  // Multilingual content
-  title       Json     // { "en": "Title", "es": "Título" }
-  description Json     // { "en": "Description", "es": "Descripción" }
-  shortBio    Json?    // { "en": "Short bio", "es": "Bio corta" }
-  
-  // Contact information
-  location    String?  // e.g., "Lima, Peru"
-  email       String?  // Contact email
-  
-  updatedAt   DateTime @updatedAt
-  
-  @@map("about")
 }
