@@ -47,14 +47,16 @@ git push origin main
 Go to **Project Settings → Environment Variables** and add:
 
 ```env
-DATABASE_URL=postgresql://postgres.bqoozzswhylbfbgxcdfm:p0rt4f0li0%24%2A@aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require
-JWT_SECRET=dORCxU8Je42WJqPe5m5Fz2wxpTlz+FIVI+ABeTsdq4g=
+DATABASE_URL=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require
+JWT_SECRET=your-jwt-secret-here
 NODE_ENV=production
 NEXT_PUBLIC_APP_URL=https://admin.alecam.dev
 NEXT_PUBLIC_FRONTEND_URL=https://alecam.dev
-SUPABASE_URL=https://bqoozzswhylbfbgxcdfm.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxb296enN3aHlsYmZiZ3hjZGZtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDk4NTE3NCwiZXhwIjoyMDg2NTYxMTc0fQ.HjIjlrBSoXDghOSqrPbWewDhrYuKjmABu6_znase7uk
+SUPABASE_URL=https://[PROJECT-REF].supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 ```
+
+💡 **Copy actual values from your local `.env` file**
 
 ⚠️ **Important**: Add these to **Production**, **Preview**, and **Development** environments.
 

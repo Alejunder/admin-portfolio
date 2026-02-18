@@ -24,7 +24,9 @@ async function main() {
   console.log('Starting database seed...');
 
   // Create admin user
-  const hashedPassword = await bcrypt.hash('admin123456', 10);
+  // For security, use ADMIN_PASSWORD env variable or default to a secure random password
+  const defaultPassword = process.env.ADMIN_PASSWORD || 'change-me-' + Math.random().toString(36).slice(2);
+  const hashedPassword = await bcrypt.hash(defaultPassword, 10);
 
   const adminUser = await prisma.user.upsert({
     where: { email: 'admin@alecam.dev' },

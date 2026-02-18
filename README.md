@@ -72,13 +72,13 @@ npm install
 The `.env` file is already configured for production:
 
 ```env
-DATABASE_URL="postgresql://postgres.bqoozzswhylbfbgxcdfm:..."
-JWT_SECRET="dORCxU8Je42WJqPe5m5Fz2wxpTlz+FIVI+..."
+DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require"
+JWT_SECRET="your-jwt-secret-here"
 NODE_ENV="production"
 NEXT_PUBLIC_APP_URL="https://admin.alecam.dev"
 NEXT_PUBLIC_FRONTEND_URL="https://alecam.dev"
-SUPABASE_URL="https://bqoozzswhylbfbgxcdfm.supabase.co"
-SUPABASE_SERVICE_ROLE_KEY="eyJhbGci..."
+SUPABASE_URL="https://[PROJECT-REF].supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key-here"
 ```
 
 ⚠️ **Security**: Never commit `.env` to version control. Make sure it's in `.gitignore`.
@@ -98,9 +98,9 @@ npm run seed
 
 **Default admin credentials:**
 - Email: `admin@alecam.dev`
-- Password: `admin123456`
+- Password: See `CREDENTIALS.md` (local file, gitignored)
 
-⚠️ **Change this password immediately after first login!**
+⚠️ **Password has been changed to a secure value**
 
 ### 4. Run Development Server
 
@@ -303,7 +303,7 @@ npx prisma db push       # Push schema to database
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@alecam.dev","password":"admin123456"}' \
+  -d '{"email":"admin@alecam.dev","password":"YOUR_PASSWORD"}' \
   -c cookies.txt
 ```
 

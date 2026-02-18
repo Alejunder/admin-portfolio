@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "change-password": "tsx scripts/change-password.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",
