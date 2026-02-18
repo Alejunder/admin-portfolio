@@ -61,36 +61,27 @@ portfolio-admin/
 
 ## 🚀 Getting Started
 
-### 1. Clone and Install
+### 1. Install Dependencies
 
 ```bash
-cd portfolio-admin
 npm install
 ```
 
-### 2. Configure Environment Variables
+### 2. Environment Variables
 
-Copy `.env.example` to `.env` and update with your values:
+The `.env` file is already configured for production:
 
 ```env
-DATABASE_URL="postgresql://postgres:[PASSWORD]@[PROJECT-REF].supabase.co:5432/postgres"
-JWT_SECRET="your-super-secret-jwt-key"
-NODE_ENV="development"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-NEXT_PUBLIC_FRONTEND_URL="http://localhost:5173"
+DATABASE_URL="postgresql://postgres.bqoozzswhylbfbgxcdfm:..."
+JWT_SECRET="dORCxU8Je42WJqPe5m5Fz2wxpTlz+FIVI+..."
+NODE_ENV="production"
+NEXT_PUBLIC_APP_URL="https://admin.alecam.dev"
+NEXT_PUBLIC_FRONTEND_URL="https://alecam.dev"
+SUPABASE_URL="https://bqoozzswhylbfbgxcdfm.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="eyJhbGci..."
 ```
 
-**Get Supabase DATABASE_URL:**
-1. Go to [Supabase Dashboard](https://app.supabase.com/)
-2. Select your project
-3. Go to **Settings** → **Database**
-4. Copy **Connection string** (URI mode)
-5. Replace `[YOUR-PASSWORD]` with your database password
-
-**Generate JWT_SECRET:**
-```bash
-openssl rand -base64 32
-```
+⚠️ **Security**: Never commit `.env` to version control. Make sure it's in `.gitignore`.
 
 ### 3. Set Up Database
 
@@ -215,6 +206,11 @@ Update `middleware.ts` to add more origins.
 
 ## 🚀 Deployment to Vercel
 
+> 📘 **For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)**  
+> 🔒 **For security checklist, see [SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)**
+
+### Quick Deployment Steps
+
 ### 1. Push to GitHub
 
 ```bash
@@ -237,7 +233,7 @@ git push -u origin main
 
 ### 3. Set Environment Variables
 
-Add these in Vercel project settings:
+Add these in Vercel project settings → Environment Variables:
 
 ```
 DATABASE_URL=postgresql://...
@@ -245,7 +241,11 @@ JWT_SECRET=your-secret-key
 NODE_ENV=production
 NEXT_PUBLIC_APP_URL=https://admin.alecam.dev
 NEXT_PUBLIC_FRONTEND_URL=https://alecam.dev
+SUPABASE_URL=https://bqoozzswhylbfbgxcdfm.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
+
+💡 Copy values from `.env`
 
 ### 4. Set Up Custom Domain
 
@@ -258,14 +258,24 @@ NEXT_PUBLIC_FRONTEND_URL=https://alecam.dev
 
 ### 5. Run Migrations
 
-After deployment, run migrations via Vercel CLI:
+After deployment, run migrations:
 
 ```bash
-vercel env pull .env.production
+# Via Vercel CLI
 npx prisma migrate deploy
+npx prisma db seed
+
+# Or via Supabase SQL Editor
+# Copy SQL from prisma/migrations/*/migration.sql
 ```
 
-Or run directly in your Supabase database using the SQL editor.
+### 6. Verify Deployment
+
+- [ ] Visit `https://admin.alecam.dev/api/projects`
+- [ ] Test login at `https://admin.alecam.dev/login`
+- [ ] Check dashboard at `https://admin.alecam.dev/dashboard`
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for comprehensive deployment guide.
 
 ## 🔧 Useful Commands
 
@@ -344,16 +354,28 @@ const response = await fetch('https://admin.alecam.dev/api/contact', {
 
 ## 🛡️ Production Checklist
 
+> 📋 **Complete checklist:** [SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)
+
+**Essential pre-deployment tasks:**
 - [ ] Change default admin password
-- [ ] Update JWT_SECRET with secure random value
-- [ ] Configure DATABASE_URL with Supabase production URL
-- [ ] Set up custom domain (admin.alecam.dev)
-- [ ] Update CORS origins in middleware.ts
-- [ ] Enable Vercel password protection (optional)
-- [ ] Set up database backups in Supabase
-- [ ] Configure monitoring (Vercel Analytics, Sentry)
-- [ ] Review and test all API endpoints
-- [ ] Add rate limiting (optional, via Vercel Edge Config)
+- [ ] Update JWT_SECRET with secure random value (`openssl rand -base64 32`)
+- [ ] Configure DATABASE_URL with Supabase production pooler URL
+- [ ] Set up custom domains (admin.alecam.dev)
+- [ ] Update CORS origins in next.config.ts
+- [ ] Run database migrations and seed
+- [ ] Test all API endpoints
+- [ ] Verify HTTPS and SSL certificates
+- [ ] Set up monitoring (Vercel Analytics, logs)
+
+**Post-deployment verification:**
+- [ ] Public API endpoints work (GET /api/projects)
+- [ ] Admin login works
+- [ ] Dashboard CRUD operations work
+- [ ] Frontend integration works (alecam.dev → admin.alecam.dev)
+- [ ] No CORS errors
+- [ ] No console errors
+
+📖 See [DEPLOYMENT.md](./DEPLOYMENT.md) for step-by-step deployment guide.
 
 ## 📚 Additional Resources
 
