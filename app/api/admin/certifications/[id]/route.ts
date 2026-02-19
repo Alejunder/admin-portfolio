@@ -56,10 +56,16 @@ export async function PATCH(
       );
     }
 
-    const updateData: any = { ...result.data };
+    // Prepare update data, handling nullable JSON fields properly
+    const updateData: Record<string, any> = {};
     
-    // Handle nulls for optional fields
-    if (updateData.credentialUrl === '') updateData.credentialUrl = null;
+    if (result.data.title !== undefined) updateData.title = result.data.title;
+    if (result.data.issuer !== undefined) updateData.issuer = result.data.issuer ?? undefined;
+    if (result.data.imageUrl !== undefined) updateData.imageUrl = result.data.imageUrl;
+    if (result.data.credentialUrl !== undefined) updateData.credentialUrl = result.data.credentialUrl ?? null;
+    if (result.data.published !== undefined) updateData.published = result.data.published;
+    if (result.data.featured !== undefined) updateData.featured = result.data.featured;
+    if (result.data.order !== undefined) updateData.order = result.data.order;
 
     const certification = await prisma.certification.update({
       where: { id },

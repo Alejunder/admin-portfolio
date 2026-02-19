@@ -73,9 +73,9 @@ export async function PATCH(
       where: { id },
       data: {
         ...result.data,
-        imageUrl: result.data.imageUrl === '' ? null : result.data.imageUrl,
-        githubUrl: result.data.githubUrl === '' ? null : result.data.githubUrl,
-        liveUrl: result.data.liveUrl === '' ? null : result.data.liveUrl,
+        imageUrl: result.data.imageUrl === '' ? null : result.data.imageUrl ?? undefined,
+        githubUrl: result.data.githubUrl === '' ? null : result.data.githubUrl ?? undefined,
+        liveUrl: result.data.liveUrl === '' ? null : result.data.liveUrl ?? undefined,
       },
     });
 
