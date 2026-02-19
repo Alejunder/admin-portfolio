@@ -64,9 +64,9 @@ export async function PUT(request: NextRequest) {
         data: {
           title: data.title,
           description: data.description,
-          shortBio: data.shortBio || null,
-          location: data.location || null,
-          email: data.email || null,
+          shortBio: data.shortBio ?? undefined,
+          location: data.location ?? undefined,
+          email: data.email ?? undefined,
         },
       });
     } else {
@@ -75,9 +75,9 @@ export async function PUT(request: NextRequest) {
         data: {
           title: data.title,
           description: data.description,
-          shortBio: data.shortBio || null,
-          location: data.location || null,
-          email: data.email || null,
+          shortBio: data.shortBio ?? undefined,
+          location: data.location ?? undefined,
+          email: data.email ?? undefined,
         },
       });
     }
