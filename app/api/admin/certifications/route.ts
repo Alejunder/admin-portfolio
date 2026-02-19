@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { isAdmin } from '@/lib/auth';
 import { createCertificationSchema, updateCertificationSchema } from '@/lib/validators';
+import { CacheManager } from '@/lib/cache';
 
 export async function GET(request: NextRequest) {
   try {
@@ -72,6 +73,9 @@ export async function POST(request: NextRequest) {
         credentialUrl: result.data.credentialUrl || null,
       },
     });
+
+    // Invalidate certifications cache
+    CacheManager.invalidateCertifications('admin:create');
 
     return NextResponse.json({ success: true, data: certification }, { status: 201 });
   } catch (error) {

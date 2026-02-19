@@ -14,6 +14,18 @@ export async function middleware(request: NextRequest) {
                           pathname.startsWith('/api/admin');
 
   if (isProtectedRoute) {
+    // Handle OPTIONS preflight for admin API routes (should not require auth)
+    if (pathname.startsWith('/api/admin') && request.method === 'OPTIONS') {
+      return new NextResponse(null, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, Cookie',
+        },
+      });
+    }
+
     const token = request.cookies.get('auth-token')?.value;
 
     if (!token) {

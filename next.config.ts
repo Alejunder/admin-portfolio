@@ -15,36 +15,9 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // CORS headers for API routes
-  async headers() {
-    const allowedOrigins = process.env.NODE_ENV === 'production'
-      ? ['https://alecam.dev', 'https://www.alecam.dev']
-      : ['http://localhost:5173', 'http://localhost:5174'];
-
-    return [
-      {
-        source: '/api/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true',
-          },
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: allowedOrigins.join(','),
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET,POST,PUT,DELETE,OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization, Cookie',
-          },
-        ],
-      },
-    ];
-  },
+  // CORS is handled dynamically in middleware.ts
+  // Do not set static CORS headers here as Access-Control-Allow-Origin
+  // cannot contain multiple comma-separated origins
 
   // Security headers
   async rewrites() {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { isAdmin } from '@/lib/auth';
 import { updateCertificationSchema } from '@/lib/validators';
+import { CacheManager } from '@/lib/cache';
 
 export async function GET(
   request: NextRequest,
@@ -72,6 +73,9 @@ export async function PATCH(
       data: updateData,
     });
 
+    // Invalidate certifications cache
+    CacheManager.invalidateCertifications('admin:update');
+
     return NextResponse.json({ success: true, data: certification });
   } catch (error: any) {
     if (error.code === 'P2025') {
@@ -102,6 +106,9 @@ export async function DELETE(
     await prisma.certification.delete({
       where: { id },
     });
+
+    // Invalidate certifications cache
+    CacheManager.invalidateCertifications('admin:delete');
 
     return NextResponse.json({ success: true, message: 'Certification deleted successfully' });
   } catch (error: any) {

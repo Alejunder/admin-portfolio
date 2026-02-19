@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { isAdmin } from '@/lib/auth';
 import { updateProjectSchema } from '@/lib/validators';
+import { CacheManager } from '@/lib/cache';
 
 export async function GET(
   request: NextRequest,
@@ -79,6 +80,9 @@ export async function PATCH(
       },
     });
 
+    // Invalidate projects cache
+    CacheManager.invalidateProjects('admin:update');
+
     return NextResponse.json({ success: true, data: project });
   } catch (error: any) {
     if (error.code === 'P2025') {
@@ -109,6 +113,9 @@ export async function DELETE(
     await prisma.project.delete({
       where: { id },
     });
+
+    // Invalidate projects cache
+    CacheManager.invalidateProjects('admin:delete');
 
     return NextResponse.json({ success: true, message: 'Project deleted successfully' });
   } catch (error: any) {

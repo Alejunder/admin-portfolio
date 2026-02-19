@@ -8,18 +8,24 @@ export async function GET(
   try {
     const { id } = await params;
     
-    const certification = await prisma.certification.findUnique({
-      where: { id },
+    const certification = await prisma.certification.findFirst({
+      where: {
+        id,
+        published: true, // Only return published certifications
+      },
     });
 
     if (!certification) {
       return NextResponse.json(
-        { error: 'Certification not found' },
+        { success: false, error: 'Certification not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ certification });
+    return NextResponse.json({ 
+      success: true,
+      data: certification 
+    });
   } catch (error) {
     console.error('Get certification error:', error);
     return NextResponse.json(

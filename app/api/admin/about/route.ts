@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { updateAboutSchema } from '@/lib/validators';
 import { toOptionalJson } from '@/lib/prisma-helpers';
+import { CacheManager } from '@/lib/cache';
 
 /**
  * GET /api/admin/about
@@ -87,6 +88,9 @@ export async function PUT(request: NextRequest) {
     }
 
     console.log('[API Success] PUT /api/admin/about - About section updated');
+
+    // Invalidate about cache
+    CacheManager.invalidateAbout('admin:update');
 
     return NextResponse.json({ 
       success: true,

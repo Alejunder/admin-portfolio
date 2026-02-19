@@ -59,6 +59,8 @@ export async function setAuthCookie(token: string) {
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/',
+    // In production, cookies are set for admin.alecam.dev domain
+    // No need to specify domain as it defaults to the current domain
   });
 }
 
