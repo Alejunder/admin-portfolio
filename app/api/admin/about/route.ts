@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { updateAboutSchema } from '@/lib/validators';
+import { toOptionalJson } from '@/lib/prisma-helpers';
 
 /**
  * GET /api/admin/about
@@ -64,7 +65,9 @@ export async function PUT(request: NextRequest) {
         data: {
           title: data.title,
           description: data.description,
-          shortBio: data.shortBio ?? undefined,
+          // Use toOptionalJson to properly handle null vs undefined
+          // null = set to NULL in DB, undefined = don't update field
+          shortBio: toOptionalJson(data.shortBio),
           location: data.location ?? undefined,
           email: data.email ?? undefined,
         },
@@ -75,7 +78,8 @@ export async function PUT(request: NextRequest) {
         data: {
           title: data.title,
           description: data.description,
-          shortBio: data.shortBio ?? undefined,
+          // On create, we can be more permissive
+          shortBio: toOptionalJson(data.shortBio),
           location: data.location ?? undefined,
           email: data.email ?? undefined,
         },

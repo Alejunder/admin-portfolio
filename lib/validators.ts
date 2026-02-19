@@ -8,19 +8,31 @@ export const loginSchema = z.object({
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
-// Shared i18n validator
+/**
+ * Shared i18n validator for multilingual JSON fields
+ * Structure: { en: string, es: string }
+ */
 const i18nStringSchema = z.object({
   en: z.string().min(1, 'English text is required'),
   es: z.string().min(1, 'Spanish text is required'),
 });
 
-// About validators
+/**
+ * I18n string type for use in TypeScript
+ */
+export type I18nString = z.infer<typeof i18nStringSchema>;
+
+/**
+ * About validators
+ * Note: nullable() allows explicit null to clear fields in database
+ */
 export const updateAboutSchema = z.object({
   title: i18nStringSchema,
   description: i18nStringSchema,
-  shortBio: i18nStringSchema.optional().nullable(),
-  location: z.string().max(100).optional().nullable(),
-  email: z.string().email('Invalid email address').optional().nullable(),
+  // Optional fields - null means "set to NULL in DB", undefined means "don't update"
+  shortBio: i18nStringSchema.nullable().optional(),
+  location: z.string().max(100).nullable().optional(),
+  email: z.string().email('Invalid email address').nullable().optional(),
 });
 
 export type UpdateAboutInput = z.infer<typeof updateAboutSchema>;
@@ -67,7 +79,7 @@ export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
 // Certification validators
 export const createCertificationSchema = z.object({
   title: i18nStringSchema,
-  issuer: i18nStringSchema.optional().nullable(),
+  issuer: i18nStringSchema, // Required JSON field
   imageUrl: z.string().min(1, 'Image URL is required'),
   credentialUrl: z.preprocess(
     (val) => val === '' || val === undefined ? null : val,
@@ -78,7 +90,10 @@ export const createCertificationSchema = z.object({
   order: z.number().int().min(0).default(0),
 });
 
-export const updateCertificationSchema = createCertificationSchema.partial();
+export const updateCertificationSchema = createCertificationSchema.partial().extend({
+  // issuer is required in schema, so when updating it should still be required if provided
+  issuer: i18nStringSchema.optional(),
+});
 
 export type CreateCertificationInput = z.infer<typeof createCertificationSchema>;
 export type UpdateCertificationInput = z.infer<typeof updateCertificationSchema>;
