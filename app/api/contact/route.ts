@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const result = createContactMessageSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
-        { error: 'Invalid input', details: result.error.errors },
+        { error: 'Invalid input', details: result.error.issues },
         { status: 400 }
       );
     }

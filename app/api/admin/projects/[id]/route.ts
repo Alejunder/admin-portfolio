@@ -51,7 +51,7 @@ export async function PATCH(
     const result = updateProjectSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
-        { success: false, error: 'Validation failed', details: result.error.errors },
+        { success: false, error: 'Validation failed', details: result.error.issues },
         { status: 400 }
       );
     }
