@@ -3,12 +3,32 @@
  * Centralized CORS configuration for public API endpoints
  */
 
-export const ALLOWED_ORIGINS = [
+// Production origins only
+const PRODUCTION_ORIGINS = [
   'https://alecam.dev',
   'https://www.alecam.dev',
+];
+
+// Development origins (only allowed in development environment)
+const DEVELOPMENT_ORIGINS = [
   'http://localhost:5173',  // Vite dev server
   'http://localhost:3000',  // Next.js dev server
 ];
+
+/**
+ * Get allowed origins based on environment
+ */
+function getAllowedOrigins(): string[] {
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  if (isProduction) {
+    // Production: only allow production domains
+    return PRODUCTION_ORIGINS;
+  }
+  
+  // Development: allow both development and production domains
+  return [...PRODUCTION_ORIGINS, ...DEVELOPMENT_ORIGINS];
+}
 
 /**
  * Get CORS headers for a request
@@ -22,8 +42,10 @@ export function getCorsHeaders(origin: string | null): HeadersInit {
     'Access-Control-Max-Age': '86400', // 24 hours
   };
 
+  const allowedOrigins = getAllowedOrigins();
+
   // Only set Origin header if the origin is in our allowed list
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+  if (origin && allowedOrigins.includes(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
     headers['Access-Control-Allow-Credentials'] = 'true';
   }
