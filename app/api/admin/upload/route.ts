@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAdmin } from '@/lib/auth';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { createClient } from '@supabase/supabase-js';
 
 // Allowed file types
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: { persistSession: false },
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const folder = formData.get('folder') as string || 'certifications'; // certifications or projects
+    const folder = (formData.get('folder') as string) || 'certifications';
 
     if (!file) {
       return NextResponse.json(
@@ -41,32 +52,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create unique filename
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    
+
     const timestamp = Date.now();
     const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '-').toLowerCase();
-    const filename = `${timestamp}-${safeName}`;
-    
-    // Create upload directory if it doesn't exist
-    const uploadDir = join(process.cwd(), 'public', 'uploads', folder);
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
+    const storagePath = `${folder}/${timestamp}-${safeName}`;
+
+    const supabase = getSupabaseAdmin();
+    const { error: uploadError } = await supabase.storage
+      .from('uploads')
+      .upload(storagePath, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error('[API Error] Supabase storage upload:', uploadError);
+      return NextResponse.json(
+        { success: false, error: 'Failed to upload file to storage' },
+        { status: 500 }
+      );
     }
 
-    // Save file
-    const filepath = join(uploadDir, filename);
-    await writeFile(filepath, buffer);
+    const { data: urlData } = supabase.storage
+      .from('uploads')
+      .getPublicUrl(storagePath);
 
-    // Return the public URL path
-    const publicUrl = `/uploads/${folder}/${filename}`;
+    const publicUrl = urlData.publicUrl;
+
+    console.log(`[API] POST /api/admin/upload - Success: ${storagePath}`);
 
     return NextResponse.json({
       success: true,
       data: {
         path: publicUrl,
-        filename,
+        filename: `${timestamp}-${safeName}`,
         size: file.size,
         type: file.type,
       },

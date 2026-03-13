@@ -27,7 +27,7 @@ interface Project {
 interface Certification {
   id: string;
   title: { en: string; es: string };
-  issuer?: { en: string; es: string };
+  issuer: { en: string; es: string };
   imageUrl: string;
   credentialUrl: string | null;
   published: boolean;
@@ -373,6 +373,10 @@ export default function DashboardPage() {
       title: {
         en: formData.get('title_en') as string,
         es: formData.get('title_es') as string,
+      },
+      issuer: {
+        en: formData.get('issuer_en') as string,
+        es: formData.get('issuer_es') as string,
       },
       imageUrl,
       credentialUrl: credentialUrl || null,
@@ -1099,6 +1103,36 @@ export default function DashboardPage() {
                       name="title_es"
                       defaultValue={(editingItem as Certification)?.title?.es || ''}
                       required
+                      className="neuro-input"
+                    />
+                  </div>
+                </div>
+
+                {/* Issuer */}
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: '#a8a8a8' }}>
+                      Issuer (English) *
+                    </label>
+                    <input
+                      type="text"
+                      name="issuer_en"
+                      defaultValue={(editingItem as Certification)?.issuer?.en || ''}
+                      required
+                      placeholder="e.g. Platzi"
+                      className="neuro-input"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2" style={{ color: '#a8a8a8' }}>
+                      Issuer (Spanish) *
+                    </label>
+                    <input
+                      type="text"
+                      name="issuer_es"
+                      defaultValue={(editingItem as Certification)?.issuer?.es || ''}
+                      required
+                      placeholder="e.g. Platzi"
                       className="neuro-input"
                     />
                   </div>
