@@ -38,12 +38,11 @@ model Project {
 }
 
 model Certification {
-  id            String   @id @default(cuid())
-  title         Json
-  issuer        Json
-  imageUrl      String
-  credentialUrl String?
-  published     Boolean  @default(true)
+  id        String  @id @default(cuid())
+  title     Json
+  issuer    Json
+  imageUrl  String
+  published Boolean @default(true)
   featured      Boolean  @default(false)
   order         Int      @default(0)
   createdAt     DateTime @default(now())

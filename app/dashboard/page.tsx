@@ -29,7 +29,6 @@ interface Certification {
   title: { en: string; es: string };
   issuer: { en: string; es: string };
   imageUrl: string;
-  credentialUrl: string | null;
   published: boolean;
   featured: boolean;
   order: number;
@@ -358,7 +357,6 @@ export default function DashboardPage() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
-    const credentialUrl = (formData.get('credentialUrl') as string)?.trim();
     const manualImageUrl = (formData.get('imageUrl') as string)?.trim();
     
     // Use uploaded image, manual URL, or existing image (when editing)
@@ -379,7 +377,6 @@ export default function DashboardPage() {
         es: formData.get('issuer_es') as string,
       },
       imageUrl,
-      credentialUrl: credentialUrl || null,
       published: formData.get('published') === 'true',
       featured: formData.get('featured') === 'true',
       order: parseInt(formData.get('order') as string) || 0,
@@ -1189,19 +1186,6 @@ export default function DashboardPage() {
                     />
                   </details>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold mb-2" style={{ color: '#a8a8a8' }}>
-                    Credential URL
-                  </label>
-                  <input
-                    type="url"
-                    name="credentialUrl"
-                    defaultValue={(editingItem as Certification)?.credentialUrl || ''}
-                    placeholder="https://credential-url.com"
-                    className="neuro-input"
-                  />
-                </div>
-
                 {/* Order */}
                 <div>
                   <label className="block text-sm font-semibold mb-2" style={{ color: '#a8a8a8' }}>

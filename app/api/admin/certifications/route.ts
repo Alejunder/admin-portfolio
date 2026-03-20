@@ -68,10 +68,7 @@ export async function POST(request: NextRequest) {
     }
 
     const certification = await prisma.certification.create({
-      data: {
-        ...result.data,
-        credentialUrl: result.data.credentialUrl || null,
-      },
+      data: result.data,
     });
 
     // Invalidate certifications cache

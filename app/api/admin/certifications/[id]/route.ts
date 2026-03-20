@@ -63,7 +63,6 @@ export async function PATCH(
     if (result.data.title !== undefined) updateData.title = result.data.title;
     if (result.data.issuer !== undefined) updateData.issuer = result.data.issuer; // Required Json field
     if (result.data.imageUrl !== undefined) updateData.imageUrl = result.data.imageUrl;
-    if (result.data.credentialUrl !== undefined) updateData.credentialUrl = result.data.credentialUrl ?? null;
     if (result.data.published !== undefined) updateData.published = result.data.published;
     if (result.data.featured !== undefined) updateData.featured = result.data.featured;
     if (result.data.order !== undefined) updateData.order = result.data.order;

@@ -81,10 +81,6 @@ export const createCertificationSchema = z.object({
   title: i18nStringSchema,
   issuer: i18nStringSchema, // Required JSON field
   imageUrl: z.string().min(1, 'Image URL is required'),
-  credentialUrl: z.preprocess(
-    (val) => val === '' || val === undefined ? null : val,
-    z.string().url('Invalid credential URL').nullable()
-  ).optional().nullable(),
   published: z.boolean().default(true),
   featured: z.boolean().default(false),
   order: z.number().int().min(0).default(0),
