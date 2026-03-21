@@ -14,8 +14,21 @@ export async function GET(
     }
 
     const { id } = await params;
-    
+
+    const select = {
+      id: true,
+      title: true,
+      issuer: true,
+      imageUrl: true,
+      published: true,
+      featured: true,
+      order: true,
+      createdAt: true,
+      updatedAt: true,
+    } as const;
+
     const certification = await prisma.certification.findUnique({
+      select,
       where: { id },
     });
 
@@ -68,6 +81,17 @@ export async function PATCH(
     if (result.data.order !== undefined) updateData.order = result.data.order;
 
     const certification = await prisma.certification.update({
+      select: {
+        id: true,
+        title: true,
+        issuer: true,
+        imageUrl: true,
+        published: true,
+        featured: true,
+        order: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       where: { id },
       data: updateData,
     });

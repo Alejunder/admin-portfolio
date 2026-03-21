@@ -25,9 +25,22 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const featured = searchParams.get('featured');
 
+    const select = {
+      id: true,
+      title: true,
+      issuer: true,
+      imageUrl: true,
+      published: true,
+      featured: true,
+      order: true,
+      createdAt: true,
+      updatedAt: true,
+    } as const;
+
     const certifications = await prisma.certification.findMany({
+      select,
       where: {
-        published: true, // Only return published certifications
+        published: true,
         ...(featured === 'true' ? { featured: true } : {}),
       },
       orderBy: [

@@ -18,8 +18,21 @@ export async function GET(request: NextRequest) {
 
     const where = published !== null ? { published: published === 'true' } : {};
 
+    const select = {
+      id: true,
+      title: true,
+      issuer: true,
+      imageUrl: true,
+      published: true,
+      featured: true,
+      order: true,
+      createdAt: true,
+      updatedAt: true,
+    } as const;
+
     const [certifications, total] = await Promise.all([
       prisma.certification.findMany({
+        select,
         where,
         skip,
         take: limit,
